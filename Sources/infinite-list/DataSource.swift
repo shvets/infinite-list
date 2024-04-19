@@ -3,7 +3,7 @@ import SwiftUI
 
 open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
   @Published public var items = [Item]()
-  @Published var isLoadingPage = false
+  @Published public var isLoadingPage = false
 
   private var currentPage = 1
   private var canLoadMorePages = true
