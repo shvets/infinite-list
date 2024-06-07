@@ -4,12 +4,15 @@ public struct InfiniteList<Item, Content>: View where Item: Identifiable & Hasha
   var name: String
   var columnsCount: Int
   var dataSource: DataSource<Item>
+  var axes: Axis.Set
   var itemContent: (Item) -> Content
 
-  public init(name: String, columnsCount: Int = 1, dataSource: DataSource<Item>, itemContent: @escaping (Item) -> Content) {
+  public init(name: String, columnsCount: Int = 1, dataSource: DataSource<Item>, axes: Axis.Set = [.horizontal, .vertical],
+              itemContent: @escaping (Item) -> Content) {
     self.name = name
     self.columnsCount = columnsCount
     self.dataSource = dataSource
+    self.axes = axes
     self.itemContent = itemContent
   }
 
@@ -19,7 +22,10 @@ public struct InfiniteList<Item, Content>: View where Item: Identifiable & Hasha
   }
 
   private func listItems() -> some View {
-      ScrollView {
+    ScrollView {
+      ZStack {
+        Spacer().containerRelativeFrame(axes)
+
         LazyVGrid(columns: Array(repeating: .init(), count: columnsCount)) {
           ForEach(dataSource.items) { item in
             itemContent(item)
@@ -41,6 +47,8 @@ public struct InfiniteList<Item, Content>: View where Item: Identifiable & Hasha
                 .scaleEffect(1.5, anchor: .center)
             }
           }
+      }
     }
+      .scrollBounceBehavior(.basedOnSize)
   }
 }
