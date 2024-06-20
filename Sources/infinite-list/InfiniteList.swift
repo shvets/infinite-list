@@ -1,15 +1,15 @@
 import SwiftUI
 
 public struct InfiniteList<Item, Content>: View where Item: Identifiable & Hashable, Content: View {
-  var name: String
+  @Binding var name: String
   var columnsCount: Int
-  var dataSource: DataSource<Item>
+  @ObservedObject var dataSource: DataSource<Item>
   var axes: Axis.Set
   var itemContent: (Item) -> Content
 
-  public init(name: String, columnsCount: Int = 1, dataSource: DataSource<Item>, axes: Axis.Set = [.horizontal, .vertical],
-              itemContent: @escaping (Item) -> Content) {
-    self.name = name
+  public init(name: Binding<String>, columnsCount: Int = 1, @ObservedObject dataSource: DataSource<Item>,
+              axes: Axis.Set = [.horizontal, .vertical], itemContent: @escaping (Item) -> Content) {
+    self._name = name
     self.columnsCount = columnsCount
     self.dataSource = dataSource
     self.axes = axes

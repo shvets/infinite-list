@@ -77,6 +77,14 @@ open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
       .map { items in
         self.items + items
       }
+      .catch { error -> AnyPublisher<[Item], Never> in
+        self.isLoadingPage = false
+        
+        return Just([])
+          .eraseToAnyPublisher()
+      }
+      .eraseToAnyPublisher()
+        
       .assign(to: &$items)
   }
 }
