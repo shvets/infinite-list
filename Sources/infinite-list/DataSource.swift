@@ -10,9 +10,7 @@ open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
 
   public var onError: (Error) -> Void = { error in print("Error: \(error)")}
 
-  public init() {
-    loadFirst()
-  }
+  public init() {}
 
   public func loadFirst() {
     reset()
