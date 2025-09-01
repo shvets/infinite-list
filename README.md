@@ -5,6 +5,6 @@ A description of this package.
 ## Publishing
 
 ```bash
-git tag 1.1.3
+git tag 1.1.4
 git push --tags
 ```
