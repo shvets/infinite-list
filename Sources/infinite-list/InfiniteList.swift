@@ -1,6 +1,6 @@
 import SwiftUI
 
-public struct InfiniteList<Item, Content>: View where Item: Identifiable & Hashable & Sendable, Content: View {
+public struct InfiniteList<Item, Content>: View where Item: Identifiable & Hashable, Content: View {
   @Binding var name: String
   var columnsCount: Int
   @ObservedObject var dataSource: DataSource<Item>
