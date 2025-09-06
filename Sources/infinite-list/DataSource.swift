@@ -44,7 +44,7 @@ open class DataSource<Item: Identifiable & Hashable & Sendable>: ObservableObjec
     return items.firstIndex(where: { $0.id == item.id }) == thresholdIndex
   }
 
-  func loadContent() {
+  @MainActor func loadContent() {
     if !isLoadingPage && canLoadMorePages {
       isLoadingPage = true
 
@@ -63,7 +63,7 @@ open class DataSource<Item: Identifiable & Hashable & Sendable>: ObservableObjec
     }
   }
 
-  func loadFromQueue() async throws {
+  @MainActor func loadFromQueue() async throws {
     (try await process(page: currentPage)).publisher
       .receive(on: DispatchQueue.main)
       .collect()
