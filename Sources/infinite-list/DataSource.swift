@@ -12,13 +12,13 @@ open class DataSource<Item: Identifiable & Hashable & Sendable>: ObservableObjec
 
   public init() {}
 
-  public func loadFirst() {
+  @MainActor public func loadFirst() {
     reset()
 
     loadContent()
   }
 
-  public func loadNext(_ item: Item) {
+  @MainActor public func loadNext(_ item: Item) {
     if requiresLoad(item) {
       loadContent()
     }
