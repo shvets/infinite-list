@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
+@MainActor open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
   @Published public var items = [Item]()
   @Published public var isLoadingPage = false
 
@@ -63,7 +63,7 @@ open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
     }
   }
 
-  @MainActor func loadFromQueue() async throws {
+  func loadFromQueue() async throws {
     (try await process(page: currentPage)).publisher
       .receive(on: DispatchQueue.main)
       .collect()
