@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-@MainActor open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
+open class DataSource<Item: Identifiable & Hashable &Sendable>: ObservableObject {
   @Published public var items = [Item]()
   @Published public var isLoadingPage = false
 
