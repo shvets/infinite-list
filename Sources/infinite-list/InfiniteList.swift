@@ -22,33 +22,39 @@ public struct InfiniteList<Item, Content>: View where Item: Identifiable & Hasha
   }
 
   private func listItems() -> some View {
-    ScrollView {
+    VStack {
+      ScrollView {
+        ZStack {
+          Spacer().containerRelativeFrame(axes)
+
+          LazyVGrid(columns: Array(repeating: .init(), count: columnsCount)) {
+            ForEach(dataSource.items) { item in
+              itemContent(item)
+                .onAppear {
+                  dataSource.loadNext(item)
+                }
+            }
+          }
+            .padding(.horizontal)
+            .refreshable {
+              dataSource.loadFirst()
+            }
+        }
+      }
+        .scrollBounceBehavior(.basedOnSize)
+    }
+      .overlay(loadingOverlay)
+  }
+
+  @ViewBuilder private var loadingOverlay: some View {
+    if dataSource.isLoadingPage {
       ZStack {
         Spacer().containerRelativeFrame(axes)
 
-        LazyVGrid(columns: Array(repeating: .init(), count: columnsCount)) {
-          ForEach(dataSource.items) { item in
-            itemContent(item)
-              .onAppear {
-                dataSource.loadNext(item)
-              }
-          }
-        }
-          .padding(.horizontal)
-          .refreshable {
-            dataSource.loadFirst()
-          }
-      }
-        .overlay {
-          if dataSource.isLoadingPage {
-            VStack {
-              ProgressView()
-                .frame(idealWidth: .infinity, maxWidth: .infinity, alignment: .center)
-                .scaleEffect(1.5, anchor: .center)
-            }
-          }
+        ProgressView()
+          .frame(idealWidth: .infinity, maxWidth: .infinity, alignment: .center)
+          .scaleEffect(1.5, anchor: .center)
       }
     }
-      .scrollBounceBehavior(.basedOnSize)
   }
 }

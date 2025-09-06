@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-@MainActor open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
+open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
   @Published public var items = [Item]()
   @Published public var isLoadingPage = false
 
@@ -10,9 +10,7 @@ import SwiftUI
 
   public var onError: (Error) -> Void = { error in print("Error: \(error)")}
 
-  public init() {
-    loadFirst()
-  }
+  public init() {}
 
   public func loadFirst() {
     reset()
