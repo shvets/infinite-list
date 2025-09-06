@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-open class DataSource<Item: Identifiable & Hashable & Sendable>: ObservableObject {
+@MainActor open class DataSource<Item: Identifiable & Hashable & Sendable>: ObservableObject {
   @Published public var items = [Item]()
   @Published public var isLoadingPage = false
 
@@ -18,7 +18,7 @@ open class DataSource<Item: Identifiable & Hashable & Sendable>: ObservableObjec
     loadContent()
   }
 
-  @MainActor public func loadNext(_ item: Item) {
+  public func loadNext(_ item: Item) {
     if requiresLoad(item) {
       loadContent()
     }
@@ -26,7 +26,6 @@ open class DataSource<Item: Identifiable & Hashable & Sendable>: ObservableObjec
 
   open func onLoadCompleted() {}
 
-  @MainActor
   open func process(page: Int) async throws -> [Item] {
     []
   }
@@ -44,7 +43,7 @@ open class DataSource<Item: Identifiable & Hashable & Sendable>: ObservableObjec
     return items.firstIndex(where: { $0.id == item.id }) == thresholdIndex
   }
 
-  @MainActor func loadContent() {
+  func loadContent() {
     if !isLoadingPage && canLoadMorePages {
       isLoadingPage = true
 
@@ -63,7 +62,7 @@ open class DataSource<Item: Identifiable & Hashable & Sendable>: ObservableObjec
     }
   }
 
-  @MainActor func loadFromQueue() async throws {
+  func loadFromQueue() async throws {
     (try await process(page: currentPage)).publisher
       .receive(on: DispatchQueue.main)
       .collect()
