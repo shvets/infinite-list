@@ -63,7 +63,7 @@ open class DataSource<Item: Identifiable & Hashable>: ObservableObject {
     }
   }
 
-  func loadFromQueue() async throws {
+  @MainActor func loadFromQueue() async throws {
     (try await process(page: currentPage)).publisher
       .receive(on: DispatchQueue.main)
       .collect()
